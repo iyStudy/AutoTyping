@@ -66,14 +66,14 @@ for i in range(max_count):
         temp_files.append(tmp.name)
         atexit.register(cleanup, temp_files)  # Register the cleanup function to be called at exit
 
-        photo = pyautogui.screenshot(region=(280, 468, 350, 38))
+        photo = pyautogui.screenshot(region=(240, 468, 400, 38))
         photo.save(tmp.name)
 
         ###
         if DEBUG:
             import matplotlib.pyplot as plt
             # スクリーンショットの撮影
-            photo = pyautogui.screenshot(region=(280, 468, 350, 38))
+            photo = pyautogui.screenshot(region=(220, 468, 420, 38))
 
             # 画像の表示
             plt.imshow(photo)
