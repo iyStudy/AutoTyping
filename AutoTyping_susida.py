@@ -7,6 +7,9 @@ import pyautogui
 from tempfile import NamedTemporaryFile
 import time
 
+DEBUG = False
+EXMODE =False
+
 def add_margin(pil_img, top, right, bottom, left, color):
     """
     画像に指定したサイズの余白を追加する関数
@@ -27,8 +30,7 @@ def cleanup(temp_files):
             os.remove(file)
         except Exception as e:
             print(f"Error removing {file}: {e}")
-DEBUG = False
-EXMODE =True
+
 
 # Tesseract OCRの設定
 pyocr.tesseract.TESSERACT_CMD = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
