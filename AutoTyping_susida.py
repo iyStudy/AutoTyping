@@ -1,11 +1,11 @@
 import os
 import numpy as np
-import atexit
 from PIL import Image
 import pyocr
 import pyautogui
 from tempfile import NamedTemporaryFile
 import time
+import keyboard 
 
 DEBUG = False
 EXMODE =False
@@ -56,30 +56,32 @@ print("プログラム起動完了。")
 temp_files = []
 max_count = 1000
 
+
 # メインループ
 for i in range(max_count): 
+     # Escキーが押されたか監視
+    if keyboard.is_pressed('esc'):  # <- Escキーを監視
+        print("Escキーが押されたため、プログラムを終了します。")
+        break  # <- ループを終了
+
     x, y = pyautogui.position()
     print(f"現在のループ番号: {i+1}/{max_count}  現在のマウス座標: {x}, {y}")
 
-    # スクリーンショットの撮影
-    with NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:  # delete=False to manually manage the file deletion
+    # スクリーンショットの撮影(x, y, width, height)
+    with NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:  
         temp_files.append(tmp.name)
-        atexit.register(cleanup, temp_files)  # Register the cleanup function to be called at exit
-
         photo = pyautogui.screenshot(region=(240, 468, 400, 38))
         photo.save(tmp.name)
 
-        ###
         if DEBUG:
             import matplotlib.pyplot as plt
-            # スクリーンショットの撮影
+            # スクリーンショットの撮影(x, y, width, height)
             photo = pyautogui.screenshot(region=(220, 468, 420, 38))
 
             # 画像の表示
             plt.imshow(photo)
             plt.axis('off')  # 軸を非表示にする
             plt.show()
-        ###
 
         # 画像の前処理
         img = Image.open(tmp.name).convert('RGB')
@@ -104,14 +106,14 @@ for i in range(max_count):
         builder = pyocr.builders.TextBuilder(tesseract_layout=3)
         text = tool.image_to_string(img3, lang="eng", builder=builder)
         lines = text.split("\n")
-        first_line = lines[0]  # 1行目のテキストを取得
+
         print(f"認識されたテキスト: {lines}")
-        print(f"認識されたテキスト[0]: {first_line}")
+
 
         if EXMODE:
-            # テキストの入力
+            # テキストの入力(本気モード)
             pyautogui.typewrite(text, interval=input_delay)
         else:
-        # テキストの入力
+            # テキストの入力(人間モード)
             for char in text:
                 pyautogui.typewrite(char, interval=input_delay)
